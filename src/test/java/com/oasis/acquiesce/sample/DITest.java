@@ -12,6 +12,7 @@ import java.sql.Connection;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+//@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/servlet-context.xml")
 public class DITest {
 
     @Autowired

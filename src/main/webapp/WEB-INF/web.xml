@@ -3,7 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-    
+
+    <!-- **ContextLoaderListener**는 web.xml 파일에서 설정되며,
+         애플리케이션이 시작될 때 root-context.xml 파일을 로드하여
+         애플리케이션 전체에서 사용할 수 있는 전역 애플리케이션 컨텍스트를 생성 -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
