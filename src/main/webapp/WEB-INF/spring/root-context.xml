@@ -5,8 +5,6 @@
        xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
 
-    <context:component-scan base-package="com.oasis.acquiesce.sample"/>
-
     <!-- HikariCP, dataSource 설정 -->
     <bean name="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
         <property name="driverClassName" value="org.mariadb.jdbc.Driver"/>
@@ -30,6 +28,7 @@
     <mybatis-spring:scan base-package="com.oasis.acquiesce.mappers"/>
 
     <!-- 전역적으로 사용되는 서비스와 리포지토리 Bean 설정 -->
+    <context:component-scan base-package="com.oasis.acquiesce.sample"/>
+    <context:component-scan base-package="com.oasis.acquiesce.service"/>
 
-    <!-- 전역 트랜잭션 관리 -->
 </beans>
