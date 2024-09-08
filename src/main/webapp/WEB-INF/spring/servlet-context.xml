@@ -17,4 +17,7 @@
     <!-- MVC 설정 활성화 -->
     <mvc:annotation-driven/>
 
+    <!-- bootstrap 경로 설정 -->
+    <mvc:resources mapping="/resources/**" location="classpath:/static/"/>
+
 </beans>
