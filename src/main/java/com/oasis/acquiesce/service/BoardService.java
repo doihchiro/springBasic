@@ -1,6 +1,7 @@
 package com.oasis.acquiesce.service;
 
 import com.oasis.acquiesce.domain.BoardVO;
+import com.oasis.acquiesce.domain.Criteria;
 import com.oasis.acquiesce.mappers.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -28,6 +29,15 @@ public class BoardService {
 
     public List<BoardVO> list() {
         return boardMapper.getList();
+    }
+
+    //paging
+    public List<BoardVO> getList(Criteria criteria) {
+        return boardMapper.getPage(criteria);
+    }
+
+    public int getTotal(Criteria criteria) {
+        return boardMapper.getTotal(criteria);
     }
 
     public BoardVO get(Long bno) {

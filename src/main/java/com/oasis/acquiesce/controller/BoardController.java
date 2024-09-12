@@ -1,16 +1,15 @@
 package com.oasis.acquiesce.controller;
 
 import com.oasis.acquiesce.domain.BoardVO;
+import com.oasis.acquiesce.domain.Criteria;
+import com.oasis.acquiesce.domain.PageDTO;
 import com.oasis.acquiesce.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public class BoardController {
     private final BoardService boardService;
 
     //list
-    @GetMapping("/list")
+    //@GetMapping("/list")
     public void list(Model model) {
         log.info("list...................");
 
@@ -33,6 +32,24 @@ public class BoardController {
         log.info(list);
 
         model.addAttribute("list", list);
+    }
+
+    @GetMapping("/list")
+    public void list(
+            @ModelAttribute("cri") Criteria criteria,
+            Model model) {
+        log.info("list...................");
+
+        List<BoardVO> list = boardService.getList(criteria);
+
+        log.info(list);
+
+        model.addAttribute("list", list);
+
+        PageDTO pageDTO = new PageDTO(criteria, boardService.getTotal(criteria));
+
+        model.addAttribute("pageMaker", pageDTO);
+
     }
 
 

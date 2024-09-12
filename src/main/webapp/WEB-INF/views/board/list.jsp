@@ -21,6 +21,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
+
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                 <tr>
@@ -44,6 +45,30 @@
                 </c:forEach>
                 </tbody>
             </table>
+
+            <div>
+                <ul class="pagination justify-content-center">
+
+                    <c:if test="${pageMaker.prev}">
+                    <li class="page-item">
+                        <a class="page-link" href="${pageMaker.startPage - 1}" tabindex="-1">Previous</a>
+                    </li>
+                    </c:if>
+
+                    <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="num">
+                    <li class="page-item ${cri.pageNum == num ? 'active':''}">
+                        <a class="page-link" href="${num}">${num}</a>
+                    </li>
+                    </c:forEach>
+
+                    <c:if test="${pageMaker.next}">
+                    <li class="page-item">
+                        <a class="page-link" href="${pageMaker.endPage + 1}">Next</a>
+                    </li>
+                    </c:if>
+
+                </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -85,7 +110,7 @@
     document.addEventListener('click', (e) => {
 
         const target = e.target.closest('tr')
-        console.log(target)
+        //console.log(target)
 
         // 'thead' 안에 있는 'tr' 클릭 시 중단
         if (!target || !target.closest('tbody')) {
@@ -98,6 +123,19 @@
         window.location = `/board/read/\${bno}`
 
     }, false)
+
+    document.querySelector(".pagination").addEventListener('click', (e) => {
+
+        e.preventDefault()
+        const target = e.target;
+        console.log(target);
+
+        const targetPage = target.getAttribute("href");
+        console.log(targetPage)
+
+        window.location = `/board/list?pageNum=\${targetPage}`
+
+    }, false);
 
 </script>
 

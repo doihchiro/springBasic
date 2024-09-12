@@ -1,6 +1,7 @@
 package com.oasis.acquiesce.mappers;
 
 import com.oasis.acquiesce.domain.BoardVO;
+import com.oasis.acquiesce.domain.Criteria;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,5 +60,16 @@ class BoardMapperTest {
         int updateCount = boardMapper.update(updateBoardVO);
 
         log.info("update: " + updateCount);
+    }
+
+    @Test
+    public void testPage() {
+        Criteria criteria = new Criteria();
+
+        criteria.setPageNum(3);
+        // 1, 10
+        List<BoardVO> list = boardMapper.getPage(criteria);
+
+        list.forEach(boardVO -> log.info(boardVO));
     }
 }
