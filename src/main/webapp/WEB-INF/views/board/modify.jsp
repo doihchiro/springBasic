@@ -64,15 +64,23 @@
     </div>
 </div>
 
+<form id="listForm" method="get" action="/board/list">
+    <input type="hidden" name="pageNum" value="${cri.pageNum}">
+    <input type="hidden" name="amount" value="${cri.amount}">
+</form>
+
 <%@include file="../includes/footer.jsp"%>
 
 <script>
 
     const bno = ${vo.bno}
     const actionForm = document.querySelector('#actionForm')
+    const listForm = document.querySelector("#listForm")
 
     document.querySelector('.btnList').addEventListener('click', (e) => {
-        window.location = '/board/list'
+        e.preventDefault()
+        e.stopPropagation()
+        listForm.submit()
     }, false)
 
     document.querySelector('.btnModify').addEventListener('click', (e) => {

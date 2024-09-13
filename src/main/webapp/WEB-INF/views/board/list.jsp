@@ -22,6 +22,11 @@
     <div class="card-body">
         <div class="table-responsive">
 
+            <form id="actionForm" method="get">
+                <input type="hidden" name="pageNum" value="${cri.pageNum}">
+                <input type="hidden" name="amount" value="${cri.amount}">
+            </form>
+
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                 <tr>
@@ -56,7 +61,7 @@
                     </c:if>
 
                     <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="num">
-                    <li class="page-item ${cri.pageNum == num ? 'active':''}">
+                    <li class="page-item ${cri.pageNum == num ? 'active' : ''}">
                         <a class="page-link" href="${num}">${num}</a>
                     </li>
                     </c:forEach>
@@ -107,20 +112,33 @@
         myModal.show()
     }
 
-    document.addEventListener('click', (e) => {
+    const actionForm = document.querySelector("#actionForm");
+
+    document.querySelector(".tbody").addEventListener('click', (e) => {
 
         const target = e.target.closest('tr')
         //console.log(target)
 
         // 'thead' 안에 있는 'tr' 클릭 시 중단
-        if (!target || !target.closest('tbody')) {
-            return;  // 이벤트 중단
-        }
+        // if (!target || !target.closest('tbody')) {
+        //     return;  // 이벤트 중단
+        // }
 
         const bno = target.dataset.bno
         console.log(bno)
 
-        window.location = `/board/read/\${bno}`
+        const before = document.querySelector("#clonedActionForm");
+        if (before) before.remove()
+
+        const clonedActionForm = actionForm.cloneNode(true)
+        clonedActionForm.setAttribute("action", `/board/read/\${bno}`)
+        clonedActionForm.setAttribute("id", "clonedActionForm")
+        document.body.appendChild(clonedActionForm)
+        clonedActionForm.submit();
+
+        console.log(clonedActionForm);
+
+        //window.location = `/board/read/\${bno}`
 
     }, false)
 
@@ -133,7 +151,10 @@
         const targetPage = target.getAttribute("href");
         console.log(targetPage)
 
-        window.location = `/board/list?pageNum=\${targetPage}`
+        // window.location = `/board/list?pageNum=\${targetPage}`
+        actionForm.setAttribute("action", "/board/list");
+        actionForm.querySelector("input[name='pageNum']").value = targetPage;
+        actionForm.submit();
 
     }, false);
 

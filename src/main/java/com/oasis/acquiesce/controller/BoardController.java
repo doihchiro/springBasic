@@ -57,6 +57,7 @@ public class BoardController {
     public String read(
             @PathVariable("job") String job,
             @PathVariable("bno") Long bno,
+            @ModelAttribute("cri") Criteria criteria,
             Model model) {
 
         log.info("job: " + job);
