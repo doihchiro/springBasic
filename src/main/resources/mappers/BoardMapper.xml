@@ -4,19 +4,42 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oasis.acquiesce.mappers.BoardMapper">
 
+    <sql id="search">
+        <if test="(types != null and keyword != null)">
+            <foreach collection="types" item="type" open=" and ( " separator="OR" close=")">
+                <choose>
+                    <when test='type.equals("T")'>
+                        title like concat('%', #{keyword}, '%')
+                    </when>
+                    <when test='type.equals("C")'>
+                        content like concat('%', #{keyword}, '%')
+                    </when>
+                    <when test='type.equals("W")'>
+                        Writer like concat('%', #{keyword}, '%')
+                    </when>
+                </choose>
+            </foreach>
+        </if>
+    </sql>
+
     <select id="getList" resultType="BoardVO">
         select * from tbl_board where bno > 0 order by bno desc
     </select>
 
     <!-- paging -->
     <select id="getPage" resultType="BoardVO">
-        select * from tbl_board where bno > 0 order by bno desc
+        select * from
+            tbl_board
+        where bno > 0
+        <include refid="search"/>
+        order by bno desc
         limit #{skip}, #{amount}
     </select>
 
     <!-- count -->
     <select id="getTotal" resultType="int">
-        select count(bno) from tbl_board
+        select count(bno) from tbl_board where bno > 0
+        <include refid="search"/>
     </select>
 
     <insert id="insert" >

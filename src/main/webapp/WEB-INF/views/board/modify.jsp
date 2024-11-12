@@ -67,6 +67,12 @@
 <form id="listForm" method="get" action="/board/list">
     <input type="hidden" name="pageNum" value="${cri.pageNum}">
     <input type="hidden" name="amount" value="${cri.amount}">
+    <c:if test="${cri.types != null && cri.keyword != null}">
+        <c:forEach var="type" items="${cri.types}">
+            <input type="hidden" name="types" value="${type}">
+        </c:forEach>
+        <input type="hidden" name="keyword" value="<c:out value="${cri.keyword}"/>">
+    </c:if>
 </form>
 
 <%@include file="../includes/footer.jsp"%>

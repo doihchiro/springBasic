@@ -33,14 +33,20 @@ class BoardMapperTest {
 
     @Test
     public void testInsert() {
-        BoardVO boardVO = new BoardVO();
-        boardVO.setTitle("test");
-        boardVO.setContent("test content");
-        boardVO.setWriter("apple");
 
-        log.info("COUNT: " + boardMapper.insert(boardVO));
+        for (int i = 0; i < 500; i++) {
+            BoardVO boardVO = new BoardVO();
+            boardVO.setTitle("Test");
+            boardVO.setContent("Test Content");
+            boardVO.setWriter("userTest");
 
-        log.info("BNO: " + boardVO.getBno());
+            boardMapper.insert(boardVO);
+        }
+
+
+//        log.info("COUNT: " + boardMapper.insert(boardVO));
+
+//        log.info("BNO: " + boardVO.getBno());
     }
 
     @Test
@@ -66,7 +72,9 @@ class BoardMapperTest {
     public void testPage() {
         Criteria criteria = new Criteria();
 
-        criteria.setPageNum(3);
+        //criteria.setPageNum(3);
+        criteria.setTypes(new String[]{"T", "C", "W"});
+        criteria.setKeyword("s");
         // 1, 10
         List<BoardVO> list = boardMapper.getPage(criteria);
 

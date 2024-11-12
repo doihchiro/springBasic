@@ -20,11 +20,35 @@
         <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
     </div>
     <div class="card-body">
+
+        <div class="float-right d-flex justify-content-start" style="margin-bottom: 2em">
+            <select name="typeSelect" class="form-select form-control">
+                <option value="">--</option>
+                <option value="T" ${cri.typeStr == 'T' ? 'selected' : ''}>제목</option>
+                <option value="C" ${cri.typeStr == 'C' ? 'selected' : ''}>내용</option>
+                <option value="W" ${cri.typeStr == 'W' ? 'selected' : ''}>작성자</option>
+                <option value="TC" ${cri.typeStr == 'TC' ? 'selected' : ''}>제목 OR 내용</option>
+                <option value="TW" ${cri.typeStr == 'TW' ? 'selected' : ''}>제목 OR 작성자</option>
+                <option value="TCW" ${cri.typeStr == 'TCW' ? 'selected' : ''}>제목 OR 내용 OR 작성자</option>
+            </select>
+            <input type="text" class="form-control" name="keywordInput" value="<c:out value="${cri.keyword}"/>">
+            <button class="btn btn-default searchBtn">Search</button>
+        </div>
+
         <div class="table-responsive">
+
+        <%--${cri}--%>
+        <%--${pageMaker}--%>
 
             <form id="actionForm" method="get">
                 <input type="hidden" name="pageNum" value="${cri.pageNum}">
                 <input type="hidden" name="amount" value="${cri.amount}">
+                <c:if test="${cri.types != null && cri.keyword != null}">
+                    <c:forEach var="type" items="${cri.types}">
+                        <input type="hidden" name="types" value="${type}">
+                    </c:forEach>
+                    <input type="hidden" name="keyword" value="<c:out value="${cri.keyword}"/>">
+                </c:if>
             </form>
 
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -56,7 +80,7 @@
 
                     <c:if test="${pageMaker.prev}">
                     <li class="page-item">
-                        <a class="page-link" href="${pageMaker.startPage - 1}" tabindex="-1">Previous</a>
+                        <a class="page-link" href="${pageMaker.startPage - 1}" tabindex="-1">Prev</a>
                     </li>
                     </c:if>
 
@@ -88,7 +112,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Modal body text goes here.</p>
+                <p>${result}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary">Save changes</button>
@@ -106,7 +130,7 @@
 
     const myModal = new bootstrap.Modal(document.getElementById('myModal'))
 
-    console.log(myModal)
+    //console.log(myModal)
 
     if (result) {
         myModal.show()
@@ -144,9 +168,13 @@
 
     document.querySelector(".pagination").addEventListener('click', (e) => {
 
-        e.preventDefault()
+        e.preventDefault() // a tag 기본 동작 방지
+        // e.stopPropagation(); // 버블링 멈춤
         const target = e.target;
         console.log(target);
+
+        // `a` 태그가 아닐 경우 리턴
+        if (target.tagName !== 'A') return;
 
         const targetPage = target.getAttribute("href");
         console.log(targetPage)
@@ -156,6 +184,54 @@
         actionForm.querySelector("input[name='pageNum']").value = targetPage;
         actionForm.submit();
 
+    }, false);
+
+    document.querySelector(".searchBtn").addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        //name 속성이 typeSelect 인 <select> 요소를 선택
+        const selectObj = document.querySelector("select[name='typeSelect']");
+        console.log(selectObj);
+
+        //selectObj.options:
+        //<select> 요소의 모든 <option> 요소들을 배열처럼 접근할 수 있다.
+        //selectObj.selectedIndex:
+        //현재 선택된 <option>의 인덱스 번호를 반환한다.
+        //예를 들어, 첫 번째 옵션이 선택되었으면 0, 두 번째 옵션이면 1
+        //.value:
+        //선택된 <option>의 value 속성 값을 가져옵니다.
+        //예시: <option value="T">Title</option>에서 "T"를 가져온다.
+        const selectValue = selectObj.options[selectObj.selectedIndex].value;
+        console.log(selectValue);
+
+        //selectValue.split(""):
+        //선택된 값인 selectValue 문자열을 빈 문자열 기준으로 나누어 배열로 변환한다.
+        //이 경우, 각 문자를 하나씩 분리하여 배열의 요소로 만든다.
+        //const arr = "TC".split("");
+        //console.log(arr); // ["T", "C"]
+        const arr = selectValue.split("");
+        console.log(arr);
+
+        let str = '';
+
+        str = `<input type="hidden" name="pageNum" value=1>`
+        str += `<input type="hidden" name="amount" value=${cri.amount}>`
+
+        if (arr && arr.length > 0) {
+            for (const type of arr) {
+                str += `<input type="hidden" name="types" value=\${type}>`
+            }
+        }
+
+        const keywordValue = document.querySelector("input[name='keywordInput']").value;
+        str += `<input type="hidden" name="keyword" value=\${keywordValue}>`
+
+        actionForm.innerHTML = str;
+
+        console.log(str);
+
+        actionForm.submit();
     }, false);
 
 </script>

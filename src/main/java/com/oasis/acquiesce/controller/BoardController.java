@@ -39,6 +39,7 @@ public class BoardController {
             @ModelAttribute("cri") Criteria criteria,
             Model model) {
         log.info("list...................");
+        log.info("criteria:" + criteria);
 
         List<BoardVO> list = boardService.getList(criteria);
 
@@ -112,13 +113,15 @@ public class BoardController {
 
     @PostMapping("/modify/{bno}")
     public String modify(
-            @PathVariable("bno") Long bno, BoardVO boardVO) {
+            @PathVariable("bno") Long bno, BoardVO boardVO, RedirectAttributes rttr) {
 
         boardVO.setBno(bno);
 
         log.info("boardVO: " + boardVO);
 
         boardService.modify(boardVO);
+
+        //rttr.addFlashAttribute("result", boardVO.getBno());
 
         return "redirect:/board/read/{bno}";
     }
