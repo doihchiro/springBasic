@@ -12,4 +12,16 @@
         values (#{bno}, #{commentText}, #{commenter})
     </insert>
 
+    <select id="selectOne" resultType="Comment">
+        select * from tbl_comments where rno = #{rno}
+    </select>
+
+    <delete id="deleteOne">
+        delete from tbl_comments where rno = #{rno}
+    </delete>
+
+    <update id="updateOne" parameterType="Comment">
+        update tbl_comments set commentText = #{commentText}
+        where rno = #{rno}
+    </update>
 </mapper>

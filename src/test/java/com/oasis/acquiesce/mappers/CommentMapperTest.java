@@ -35,4 +35,34 @@ class CommentMapperTest {
             log.info(insert);
         }
     }
+
+    @Test
+    void testSelectOne() {
+        Long rno = 7L;
+
+        log.info(commentMapper.selectOne(rno));
+    }
+
+    @Test
+    void testDeleteOne() {
+        log.info(commentMapper.deleteOne(15L));
+    }
+
+    @Test
+    void testUpdateOne() {
+        Comment comment = Comment.builder().rno(1L).commentText("update...1").build();
+        log.info(commentMapper.updateOne(comment));
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
