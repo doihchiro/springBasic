@@ -34,11 +34,11 @@ class BoardMapperTest {
     @Test
     public void testInsert() {
 
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 555; i++) {
             BoardVO boardVO = new BoardVO();
-            boardVO.setTitle("Test");
-            boardVO.setContent("Test Content");
-            boardVO.setWriter("userTest");
+            boardVO.setTitle("New Test");
+            boardVO.setContent("New Test Content");
+            boardVO.setWriter("Newbie");
 
             boardMapper.insert(boardVO);
         }
