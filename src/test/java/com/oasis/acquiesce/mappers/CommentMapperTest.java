@@ -1,6 +1,7 @@
 package com.oasis.acquiesce.mappers;
 
 import com.oasis.acquiesce.domain.Comment;
+import com.oasis.acquiesce.domain.Criteria;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +26,7 @@ class CommentMapperTest {
     void testInsert() {
         Long bno = 554L;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 80; i++) {
             Comment comment = Comment.builder()
                     .bno(bno)
                     .commentText("test comment..." + i)
@@ -52,6 +53,21 @@ class CommentMapperTest {
     void testUpdateOne() {
         Comment comment = Comment.builder().rno(1L).commentText("update...1").build();
         log.info(commentMapper.updateOne(comment));
+    }
+
+
+    @Test
+    void testGetList() {
+        Criteria criteria = new Criteria();
+
+        commentMapper.getList(criteria, 555L).forEach(comment -> log.info(comment));
+    }
+
+    @Test
+    void testGetTotal() {
+        Criteria criteria = new Criteria();
+
+        log.info(commentMapper.getTotal(criteria, 553L));
     }
 }
 

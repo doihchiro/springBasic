@@ -24,4 +24,14 @@
         update tbl_comments set commentText = #{commentText}
         where rno = #{rno}
     </update>
+
+    <select id="getList" resultType="Comment">
+        select * from tbl_comments
+        where bno = #{bno} and rno > 0
+        limit #{cri.skip}, #{cri.amount}
+    </select>
+
+    <select id="getTotal" resultType="int">
+        select count(rno) from tbl_comments where bno = #{bno}
+    </select>
 </mapper>
