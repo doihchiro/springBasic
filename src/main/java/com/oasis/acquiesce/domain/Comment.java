@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentVO {
+public class Comment {
 
     private Long rno;
     private Long bno;
