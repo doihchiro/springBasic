@@ -6,11 +6,9 @@ import com.oasis.acquiesce.domain.PageDTO;
 import com.oasis.acquiesce.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +19,33 @@ import java.util.Map;
 public class CommentController {
 
     private final CommentService commentService;
+
+    @PostMapping("/register")
+    public Map<String, Long> register(@RequestBody Comment comment) {
+        log.info("comment: {}", comment);
+        Long rno = commentService.registerComment(comment);
+        return Map.of("RNO", rno);
+    }
+
+    @GetMapping("{rno}")
+    public Comment get(@PathVariable("rno") Long rno) {
+        return commentService.getComment(rno);
+    }
+
+    @DeleteMapping("{rno}")
+    public Map<String, Boolean> delete(@PathVariable("rno") Long rno) {
+        log.info("delete: {}", rno);
+        boolean result = commentService.deleteComment(rno);
+        return Map.of("Result", result);
+    }
+
+    @PutMapping("{rno}")
+    public Map<String, Boolean> modify(@PathVariable("rno") Long rno, @RequestBody Comment comment) {
+        log.info("update: {}", rno);
+        comment.setRno(rno);
+        boolean result = commentService.modifyComment(comment);
+        return Map.of("Result", result);
+    }
 
     @GetMapping("/list/{bno}")
     public Map<String,Object> listOfBoard(@PathVariable("bno") Long bno, Criteria criteria) {
@@ -34,7 +59,11 @@ public class CommentController {
 
         PageDTO pageDTO = new PageDTO(criteria, totalComments);
 
-        return Map.of("comments", comments, "pageDTO", pageDTO);
+        Map<String,Object> map = new HashMap<>();
+        map.put("comments", comments);
+        map.put("pageDTO", pageDTO);
+
+        return map;
 
     }
 }
