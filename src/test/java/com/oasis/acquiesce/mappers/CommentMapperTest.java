@@ -24,13 +24,13 @@ class CommentMapperTest {
 
     @Test
     void testInsert() {
-        Long bno = 554L;
+        Long bno = 555L;
 
-        for (int i = 0; i < 80; i++) {
+        for (int i = 1; i <= 260; i++) {
             Comment comment = Comment.builder()
                     .bno(bno)
                     .commentText("test comment..." + i)
-                    .commenter("apple")
+                    .commenter("loopy")
                     .build();
             int insert = commentMapper.insert(comment);
             log.info(insert);

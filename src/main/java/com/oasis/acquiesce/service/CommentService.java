@@ -21,6 +21,10 @@ public class CommentService {
         return comment.getRno();
     }
 
+    public int getCommentsCountOfBoard(Long bno) {
+        return commentMapper.getTotal(null, bno);
+    }
+
     public Comment getComment(Long rno) {
         return commentMapper.selectOne(rno);
     }

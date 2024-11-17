@@ -63,6 +63,70 @@
     </div>
 </div>
 
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <button class="btn btn-info addReplyBtn">Add Reply</button>
+    </div>
+    <div class="card-body ">
+        <div>
+            <ul class="list-group comments">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Cras justo odio
+                    <span class="badge badge-primary badge-pill">14</span>
+                </li>
+            </ul>
+        </div>
+        <div class="mt-3" >
+            <ul class="pagination d-flex justify-content-center">
+                <li class="page-item ">
+                    <a class="page-link" href="#" tabindex="-1">Prev</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item active">
+                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="commentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Comment Text</span>
+                    </div>
+                    <input type="text" name="commentText" class="form-control" >
+                </div>
+                <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">commenter</span>
+                    </div>
+                    <input type="text" name="commenter" class="form-control" >
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id='commentModBtn' type="button" class="btn btn-warning">Modify</button>
+                <button id='commentDelBtn' type="button" class="btn btn-danger">Delete</button>
+                <button id='commentRegBtn' type="button" class="btn btn-primary">Register</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <form id="actionForm" method="get">
     <input type="hidden" name="pageNum" value="${cri.pageNum}">
     <input type="hidden" name="amount" value="${cri.amount}">
@@ -75,6 +139,7 @@
 </form>
 
 <%@include file="../includes/footer.jsp"%>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
 
@@ -89,6 +154,133 @@
     document.querySelector('.btnModify').addEventListener('click', (e) => {
         actionForm.setAttribute("action", `/board/modify/\${bno}`)
         actionForm.submit()
+    }, false)
+
+</script>
+
+<script>
+
+    const boardBno = ${vo.bno}
+    const commentUL = document.querySelector('.comments')
+    const pageUL = document.querySelector('.pagination')
+
+    const getList = async (pageParam, amountParam) => {
+
+        const pageNum = pageParam || 1
+        const amount = amountParam || 10
+
+        const res = await axios.get(`/comment/list/\${boardBno}`, {
+            params: {pageNum, amount}
+        })
+        const data = res.data;
+        const comments = data.comments;
+        const pageDTO = data.pageDTO;
+
+        printComments(comments, pageDTO)
+
+        console.log(data)
+        console.log(comments)
+        console.log(pageDTO)
+    }
+
+    const registerComment = async (commentObj) => {
+
+        const res = await axios.post(`/comment/register`, commentObj)
+        const data = res.data
+
+        const lastPage = Math.ceil(data.COUNT / 10.0)
+
+        getList(lastPage)
+    }
+
+    const printComments = (comments, pageDTO) => {
+        commentUL.innerHTML = ''
+
+        let str = ''
+
+        comments.forEach(comment => {
+
+            const {rno, commentText, commenter} = comment
+
+            str +=
+                `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    \${rno} --- \${commentText}
+                    <span class="badge badge-primary badge-pill">\${commenter}</span>
+                </li>`
+        })
+
+        commentUL.innerHTML = str
+
+        //----------------------------------------
+        const {startPage, endPage, prev, next} = pageDTO
+        const pageNum = pageDTO.cri.pageNum
+
+        pageUL.innerHTML = ''
+
+        let pageStr = ''
+
+        if (prev) {
+            pageStr += `
+                <li class="page-item ">
+                    <a class="page-link" href="\${startPage - 1}" tabindex="-1">Prev</a>
+                </li>
+            `
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageStr += `<li class="page-item \${i === pageNum ? 'active' : ''}"><a class="page-link" href="\${i}">\${i}</a></li>`
+        }
+
+        if (next) {
+            pageStr += `
+                <li class="page-item ">
+                    <a class="page-link" href="\${endPage + 1}" tabindex="-1">Next</a>
+                </li>
+            `
+        }
+
+        pageUL.innerHTML = pageStr
+    }
+
+    pageUL.addEventListener('click', (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = e.target
+        console.log(target)
+        // `a` 태그가 아닐 경우 리턴
+        if (target.tagName !== 'A') return;
+
+        const pageNum = target.getAttribute('href')
+
+        console.log(pageNum)
+
+        getList(pageNum)
+
+    }, false)
+
+    getList()
+
+    const commentAddModal = new bootstrap.Modal(document.querySelector('#commentModal'))
+    const commentTextInput = document.querySelector("input[name='commentText']");
+    const commenterInput = document.querySelector("input[name='commenter']");
+
+    commentAddModal.show()
+
+    document.querySelector("#commentRegBtn").addEventListener('click', (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const commentObj = {
+            bno: boardBno,
+            commentText: commentTextInput.value,
+            commenter: commenterInput.value
+        }
+
+        registerComment(commentObj).then(() => {
+            commentAddModal.hide()
+        })
+
     }, false)
 
 </script>

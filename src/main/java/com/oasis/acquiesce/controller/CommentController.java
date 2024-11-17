@@ -24,7 +24,10 @@ public class CommentController {
     public Map<String, Long> register(@RequestBody Comment comment) {
         log.info("comment: {}", comment);
         Long rno = commentService.registerComment(comment);
-        return Map.of("RNO", rno);
+
+        int commentsCount = commentService.getCommentsCountOfBoard(comment.getBno());
+
+        return Map.of("RNO", rno, "COUNT", (long) commentsCount);
     }
 
     @GetMapping("{rno}")
