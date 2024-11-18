@@ -37,6 +37,18 @@ dependencies {
     implementation 'org.springframework:spring-jdbc:5.3.27'
     implementation 'org.springframework:spring-tx:5.3.27'
 
+    // AOP 추가 시작
+    // https://mvnrepository.com/artifact/org.springframework/spring-aop
+    implementation 'org.springframework:spring-aop:5.3.27'
+
+    // https://mvnrepository.com/artifact/org.aspectj/aspectjrt
+    implementation 'org.aspectj:aspectjrt:1.9.8'
+
+    // https://mvnrepository.com/artifact/org.aspectj/aspectjweaver
+    implementation 'org.aspectj:aspectjweaver:1.9.8'
+    // AOP 추가 끝
+
+
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly 'org.projectlombok:lombok:1.18.30'
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
@@ -71,6 +83,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1'
 
+    // 썸네일
+    // https://mvnrepository.com/artifact/net.coobird/thumbnailator
+    implementation 'net.coobird:thumbnailator:0.4.20'
 
 }
 

@@ -11,8 +11,14 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <!-- 파일 업로드 설정 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />
+
     <!-- Controller 설정 -->
     <context:component-scan base-package="com.oasis.acquiesce.controller"/>
+
+    <!-- UpDownUtil 설정 -->
+    <context:component-scan base-package="com.oasis.acquiesce.util"/>
 
     <!-- MVC 설정 활성화 -->
     <mvc:annotation-driven/>

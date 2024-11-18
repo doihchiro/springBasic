@@ -3,7 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- HikariCP, dataSource 설정 -->
     <bean name="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
@@ -15,7 +16,7 @@
         <property name="minimumIdle" value="2"/>
     </bean>
 
-    <bean name="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
         <constructor-arg ref="hikariConfig"/>
     </bean>
 
@@ -30,5 +31,15 @@
     <!-- 전역적으로 사용되는 서비스와 리포지토리 Bean 설정 -->
     <context:component-scan base-package="com.oasis.acquiesce.sample"/>
     <context:component-scan base-package="com.oasis.acquiesce.service"/>
+
+    <!--AOP 설정-->
+    <context:component-scan base-package="com.oasis.acquiesce.aop"/>
+    <aop:aspectj-autoproxy/>
+
+    <!--트랜잭션 설정-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven/>
 
 </beans>

@@ -1,17 +1,21 @@
 package com.oasis.acquiesce.controller;
 
+import com.oasis.acquiesce.domain.Attach;
 import com.oasis.acquiesce.domain.BoardVO;
 import com.oasis.acquiesce.domain.Criteria;
 import com.oasis.acquiesce.domain.PageDTO;
 import com.oasis.acquiesce.service.BoardService;
+import com.oasis.acquiesce.util.UpDownUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -21,6 +25,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final UpDownUtil upDownUtil;
 
     //list
     //@GetMapping("/list")
@@ -81,7 +86,18 @@ public class BoardController {
     public void register() {}
 
     @PostMapping("/register")
-    public String registerPost(BoardVO boardVO, RedirectAttributes rttr) {
+    public String registerPost(
+            BoardVO boardVO,
+            @RequestParam(value = "files", required = false) MultipartFile[] files,
+            RedirectAttributes rttr) {
+
+
+        log.info("------upload------");
+        log.info("files: " + Arrays.toString(files));
+
+        List<Attach> attachList = upDownUtil.upload(files);
+
+        boardVO.setAttachList(attachList);
 
         log.info("boardVO: " + boardVO);
 

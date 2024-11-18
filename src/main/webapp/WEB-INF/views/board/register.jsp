@@ -20,7 +20,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Board Register</h6>
     </div>
     <div class="card-body">
-        <form action="/board/register" method="post">
+        <form id="registerForm" action="/board/register" method="post" enctype="multipart/form-data">
             <div class="form-group input-group input-group-lg">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Title</span>
@@ -39,8 +39,14 @@
                 </div>
                 <input type="text" name="writer" class="form-control" >
             </div>
+            <div class="form-group input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Files</span>
+                </div>
+                <input type="file" name="files" class="form-control" multiple>
+            </div>
             <div class="input-group input-group-lg">
-                <button type="submit" class="btn btn-primary" >SUBMIT</button>
+                <button type="submit" class="btn btn-primary submitBtn" >SUBMIT</button>
             </div>
         </form>
     </div>
@@ -51,6 +57,34 @@
 <%@include file="../includes/footer.jsp"%>
 
 <script>
+
+    const registerForm = document.querySelector("#registerForm");
+
+    document.querySelector(".submitBtn").addEventListener('click', (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        // JavaScript 에서 정규식을 리터럴 방식으로 정의
+        const fileReg = /(.*?)\.(gif|png|jpg|jpeg|bmp)$/
+
+        const fileInput = document.querySelector("input[name='files']");
+
+        //console.dir(fileInput)
+        const fileArr = fileInput.files;
+
+        if (fileArr && fileArr.length > 0) {
+            for (const file of fileArr) {
+                //console.dir(file)
+               if(!file.name.match(fileReg)) {
+                   alert("허용하지 않는 파일 확장자")
+                   return
+               }
+            }
+        }
+
+        registerForm.submit()
+
+    }, false)
 
 </script>
 
