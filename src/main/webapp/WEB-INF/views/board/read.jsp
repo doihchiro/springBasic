@@ -65,7 +65,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <button class="btn btn-info addReplyBtn">Add Reply</button>
+        <button class="btn btn-info addCommentBtn">Add Comment</button>
     </div>
     <div class="card-body ">
         <div>
@@ -164,6 +164,10 @@
     const commentUL = document.querySelector('.comments')
     const pageUL = document.querySelector('.pagination')
 
+    // 현재 댓글 페이지
+    let currentPage = 1
+    let currentRno = 0
+
     const getList = async (pageParam, amountParam) => {
 
         const pageNum = pageParam || 1
@@ -203,7 +207,7 @@
             const {rno, commentText, commenter} = comment
 
             str +=
-                `<li class="list-group-item d-flex justify-content-between align-items-center">
+                `<li data-rno="\${rno}" class="list-group-item d-flex justify-content-between align-items-center">
                     \${rno} --- \${commentText}
                     <span class="badge badge-primary badge-pill">\${commenter}</span>
                 </li>`
@@ -252,20 +256,62 @@
         if (target.tagName !== 'A') return;
 
         const pageNum = target.getAttribute('href')
-
         console.log(pageNum)
+
+        currentPage = pageNum
 
         getList(pageNum)
 
     }, false)
 
+    commentUL.addEventListener('click', (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = e.target
+        console.log(target)
+
+        // 'LI' 태그가 아니면 함수 종료
+        if (target.tagName !== 'LI') return
+
+        currentRno = target.dataset.rno
+
+        if (currentRno) console.log("currentRno: " + currentRno)
+
+        console.log("currentPage: " + currentPage)
+
+        getComment(currentRno).then(result => {
+            commentTextInput.value = result.commentText
+            commenterInput.value = result.commenter
+            commentAddModal.show()
+        })
+
+    }, false)
+
+    const getComment = async (rno) => {
+        const res = await axios.get(`/comment/\${rno}`)
+        console.log(res)
+        return res.data
+    }
+
+    const deleteComment = async (rno) => {
+        const res = await axios.delete(`/comment/\${rno}`)
+        return res.data
+    }
+
+    const modifyComment = async (commentObj) => {
+        const res = await axios.put(`/comment/\${currentRno}`, commentObj)
+        return res.data
+    }
+
     getList()
 
+    // modal
     const commentAddModal = new bootstrap.Modal(document.querySelector('#commentModal'))
     const commentTextInput = document.querySelector("input[name='commentText']");
     const commenterInput = document.querySelector("input[name='commenter']");
 
-    commentAddModal.show()
+    //commentAddModal.show()
 
     document.querySelector("#commentRegBtn").addEventListener('click', (e) => {
         e.preventDefault()
@@ -280,6 +326,35 @@
         registerComment(commentObj).then(() => {
             commentAddModal.hide()
         })
+
+    }, false)
+
+    document.querySelector("#commentDelBtn").addEventListener('click', (e) => {
+        deleteComment(currentRno).then(result => {
+            alert("댓글이 삭제되었습니다.")
+            commentAddModal.hide()
+            getList()
+        })
+    }, false)
+
+    document.querySelector("#commentModBtn").addEventListener('click', (e) => {
+
+        const commentObj = {
+            commentText: commentTextInput.value,
+            commenter: commenterInput.value,
+            bno: boardBno
+        }
+
+        modifyComment(commentObj).then(result => {
+            alert("댓글이 수정되었습니다.")
+            commentAddModal.hide()
+            getList(currentPage)
+        })
+    }, false)
+
+    document.querySelector(".addCommentBtn").addEventListener("click", e => {
+
+        commentAddModal.show()
 
     }, false)
 
