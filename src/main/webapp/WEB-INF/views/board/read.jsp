@@ -61,12 +61,15 @@
             <%--</c:if>--%>
         </div>
     </div>
+</div>
 
-    <div class="attachList d-flex">
+<div class="card shadow mb-4">
+
+    <div class="attachList d-flex justify-content-center">
         <c:if test="${vo.attachList != null && vo.attachList.size() > 0}">
             <c:forEach items="${vo.attachList}" var="attach">
                 <c:if test="${attach.ano != null}">
-                    <div>
+                    <div class="m-1">
                         <a href="/files/${attach.fullName}" target="_blank">
                             <img src="/files/s_${attach.fullName}"/>
                         </a>

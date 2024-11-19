@@ -128,9 +128,18 @@ public class BoardController {
 
     @PostMapping("/modify/{bno}")
     public String modify(
-            @PathVariable("bno") Long bno, BoardVO boardVO, RedirectAttributes rttr) {
+            @PathVariable("bno") Long bno,
+            BoardVO boardVO,
+            @RequestParam(value = "files", required = false) MultipartFile[] files,
+            RedirectAttributes rttr) {
 
         boardVO.setBno(bno);
+
+        List<Attach> attachList = upDownUtil.upload(files);
+
+        if (attachList != null && !attachList.isEmpty()) {
+            boardVO.setAttachList(attachList);
+        }
 
         log.info("boardVO: " + boardVO);
 

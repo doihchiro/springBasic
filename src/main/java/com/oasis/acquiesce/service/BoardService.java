@@ -57,7 +57,19 @@ public class BoardService {
     }
 
     public boolean modify(BoardVO boardVO) {
-        return boardMapper.update(boardVO) == 1;
+
+        int count = boardMapper.update(boardVO);
+
+        List<Attach> attachList = boardVO.getAttachList();
+
+        if (attachList != null && !attachList.isEmpty() && count == 1) {
+            for (Attach attach : attachList) {
+                attach.setBno(boardVO.getBno());
+                boardMapper.insertAttach(attach);
+            }
+        }
+
+        return count == 1;
     }
 
     public boolean remove(Long bno) {

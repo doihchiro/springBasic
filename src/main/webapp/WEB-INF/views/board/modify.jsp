@@ -20,7 +20,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Board Modify</h6>
     </div>
     <div class="card-body">
-        <form id="actionForm" action="/board/modify" method="post">
+        <form id="actionForm" action="/board/modify" method="post" enctype="multipart/form-data">
 
             <div class="form-group input-group input-group-lg">
                 <div class="input-group-prepend">
@@ -54,14 +54,37 @@
                 </div>
                 <input type="text" class="form-control"  value="<c:out value="${vo.regDate}"/>"  readonly>
             </div>
+            <div class="form-group input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Files</span>
+                </div>
+                <input type="file" name="files" class="form-control" multiple>
+            </div>
 
-            <div class="float-right">
+            <div class="float-right mt-2">
                 <button type="button" class="btn btn-info btnList" >LIST</button>
                 <button type="button" class="btn btn-warning btnModify" >MODIFY</button>
                 <button type="button" class="btn btn-danger btnRemove" >REMOVE</button>
             </div>
         </form>
     </div>
+</div>
+
+<div class="card">
+
+    <div class="attachList d-flex justify-content-center">
+        <c:if test="${vo.attachList != null && vo.attachList.size() > 0}">
+            <c:forEach items="${vo.attachList}" var="attach">
+                <c:if test="${attach.ano != null}">
+                    <div class="d-flex m-1 position-relative">
+                        <img src="/files/s_${attach.fullName}">
+                        <button class="btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle-x">X</button>
+                    </div>
+                </c:if>
+            </c:forEach>
+        </c:if>
+    </div>
+
 </div>
 
 <form id="listForm" method="get" action="/board/list">
