@@ -49,9 +49,29 @@
         insert into tbl_board (title, content, writer)
         values (#{title}, #{content}, #{writer})
     </insert>
-    
-    <select id="select" resultType="BoardVO">
-        select * from tbl_board where bno = #{bno}
+
+    <resultMap id="boardMap" type="BoardVO">
+        <id property="bno" column="bno"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="writer" column="writer"/>
+        <result property="regDate" column="regDate"/>
+        <result property="updateDate" column="updateDate"/>
+        <collection property="attachList" resultMap="attachMap"/>
+    </resultMap>
+
+    <resultMap id="attachMap" type="Attach">
+        <id property="ano" column="ano"/>
+        <result property="bno" column="bno"/>
+        <result property="uuid" column="uuid"/>
+        <result property="fileName" column="fileName"/>
+    </resultMap>
+
+    <select id="select" resultMap="boardMap">
+        select * from tbl_board b
+        left join tbl_attach a
+        on b.bno = a.bno
+        where b.bno = #{bno}
     </select>
 
     <update id="update">

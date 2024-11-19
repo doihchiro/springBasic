@@ -25,5 +25,6 @@
 
     <!-- bootstrap 경로 설정 -->
     <mvc:resources mapping="/resources/**" location="classpath:/static/"/>
+    <mvc:resources mapping="/files/**" location="file:///C:/upload/"/>
 
 </beans>
