@@ -59,4 +59,9 @@
         where bno = #{bno}
     </update>
 
+    <!-- 파일 등록 -->
+    <insert id="insertAttach" >
+        insert into tbl_attach (bno, uuid, fileName)
+        values (#{bno}, #{uuid}, #{fileName})
+    </insert>
 </mapper>

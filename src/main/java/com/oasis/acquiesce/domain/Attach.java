@@ -9,4 +9,5 @@ public class Attach {
     private Long bno;
     private String uuid;
     private String fileName;
+
 }

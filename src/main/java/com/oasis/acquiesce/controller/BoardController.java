@@ -91,7 +91,6 @@ public class BoardController {
             @RequestParam(value = "files", required = false) MultipartFile[] files,
             RedirectAttributes rttr) {
 
-
         log.info("------upload------");
         log.info("files: " + Arrays.toString(files));
 

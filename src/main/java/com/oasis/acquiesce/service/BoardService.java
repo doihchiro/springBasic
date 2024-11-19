@@ -1,5 +1,6 @@
 package com.oasis.acquiesce.service;
 
+import com.oasis.acquiesce.domain.Attach;
 import com.oasis.acquiesce.domain.BoardVO;
 import com.oasis.acquiesce.domain.Criteria;
 import com.oasis.acquiesce.mappers.BoardMapper;
@@ -24,7 +25,18 @@ public class BoardService {
 
         boardMapper.insert(boardVO);
 
-        return boardVO.getBno();
+        Long bno = boardVO.getBno();
+
+        List<Attach> attachList = boardVO.getAttachList();
+
+        if (attachList != null && !attachList.isEmpty()) {
+            for (Attach attach : attachList) {
+                attach.setBno(bno);
+                boardMapper.insertAttach(attach);
+            }
+        }
+
+        return bno;
     }
 
     public List<BoardVO> list() {

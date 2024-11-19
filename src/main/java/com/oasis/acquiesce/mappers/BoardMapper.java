@@ -1,5 +1,6 @@
 package com.oasis.acquiesce.mappers;
 
+import com.oasis.acquiesce.domain.Attach;
 import com.oasis.acquiesce.domain.BoardVO;
 import com.oasis.acquiesce.domain.Criteria;
 
@@ -18,4 +19,7 @@ public interface BoardMapper {
     int insert(BoardVO boardVO);
     BoardVO select(Long bno);
     int update(BoardVO boardVO);
+
+    // 파일 등록 추가
+    int insertAttach(Attach attach);
 }
