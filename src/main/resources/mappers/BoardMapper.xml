@@ -75,7 +75,7 @@
     </select>
 
     <update id="update">
-        update tbl_board set title = #{title}, content = #{content}, updateDate = now()
+        update tbl_board set title = #{title}, content = #{content}, delFlag = #{delFlag}
         where bno = #{bno}
     </update>
 

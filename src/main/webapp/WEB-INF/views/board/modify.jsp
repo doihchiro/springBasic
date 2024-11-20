@@ -130,9 +130,29 @@
         e.preventDefault()
         e.stopPropagation()
 
+        const buttons = document.querySelectorAll(".attachList button");
+
+        console.log(buttons)
+
+        if (buttons && buttons.length > 0) {
+
+            let str = ''
+
+            buttons.forEach(button => {
+                const ano = button.dataset.ano
+                const fullName = button.dataset.fullname;
+
+                str += `<input type="hidden" name="anos" value="\${ano}">`
+                str += `<input type="hidden" name="fullNames" value="\${fullName}">`
+            })
+
+            document.querySelector('.deleteImages').innerHTML += str
+        }
+
         actionForm.action = `/board/remove/\${bno}`
         actionForm.method = 'post'
         actionForm.submit()
+
     }, false)
 
     document.querySelector(".attachList").addEventListener('click', (e) => {
@@ -157,7 +177,6 @@
 
             document.querySelector('.deleteImages').innerHTML += str
         }
-
 
     }, false)
 </script>

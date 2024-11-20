@@ -110,16 +110,23 @@ public class BoardController {
 
     @PostMapping("/remove/{bno}")
     public String remove(
-            @PathVariable("bno") Long bno, RedirectAttributes rttr) {
+            @PathVariable("bno") Long bno,
+            @RequestParam(value = "anos", required = false) Long[] anos,
+            @RequestParam(value = "fullNames", required = false) String[] fullNames,
+            RedirectAttributes rttr) {
 
         BoardVO boardVO = new BoardVO();
         boardVO.setBno(bno);
         boardVO.setTitle("해당 글은 삭제 되었습니다.");
         boardVO.setContent("해당 글은 삭제 되었습니다.");
+        boardVO.setDelFlag(true);
 
         log.info("boardVO: " + boardVO);
 
-        boardService.modify(boardVO, null);
+        boardService.modify(boardVO, anos);
+
+        // 삭제할 파일들 삭제
+        upDownUtil.deleteFiles(fullNames);
 
         rttr.addFlashAttribute("result", boardVO.getBno());
 
