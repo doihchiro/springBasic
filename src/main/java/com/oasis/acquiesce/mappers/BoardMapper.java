@@ -3,6 +3,7 @@ package com.oasis.acquiesce.mappers;
 import com.oasis.acquiesce.domain.Attach;
 import com.oasis.acquiesce.domain.BoardVO;
 import com.oasis.acquiesce.domain.Criteria;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,4 +23,7 @@ public interface BoardMapper {
 
     // 파일 등록 추가
     int insertAttach(Attach attach);
+
+    // 파일 삭체 추가
+    void deleteAttach(@Param("anos") Long[] anos);
 }

@@ -84,4 +84,16 @@
         insert into tbl_attach (bno, uuid, fileName)
         values (#{bno}, #{uuid}, #{fileName})
     </insert>
+
+    <!-- 파일 샂게 -->
+    <delete id="deleteAttach" >
+        delete from tbl_attach
+        <where>
+            <if test="anos != null and anos.length > 0">
+                <foreach collection="anos" item="ano" open="ano in (" separator="," close=")">
+                    #{ano}
+                </foreach>
+            </if>
+        </where>
+    </delete>
 </mapper>

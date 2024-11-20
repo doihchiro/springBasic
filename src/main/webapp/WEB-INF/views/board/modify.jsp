@@ -66,6 +66,8 @@
                 <button type="button" class="btn btn-warning btnModify" >MODIFY</button>
                 <button type="button" class="btn btn-danger btnRemove" >REMOVE</button>
             </div>
+
+            <div class="deleteImages"></div>
         </form>
     </div>
 </div>
@@ -78,7 +80,10 @@
                 <c:if test="${attach.ano != null}">
                     <div class="d-flex m-1 position-relative">
                         <img src="/files/s_${attach.fullName}">
-                        <button class="btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle-x">X</button>
+                        <button class="removeImgBtn btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle-x"
+                                data-ano="${attach.ano}"
+                                data-fullname="${attach.fullName}"
+                        >X</button>
                     </div>
                 </c:if>
             </c:forEach>
@@ -128,6 +133,32 @@
         actionForm.action = `/board/remove/\${bno}`
         actionForm.method = 'post'
         actionForm.submit()
+    }, false)
+
+    document.querySelector(".attachList").addEventListener('click', (e) => {
+
+        const target = e.target;
+
+        if (target.tagName !== 'BUTTON') {
+            return
+        }
+
+        const ano = target.dataset.ano
+        const fullName = target.dataset.fullname
+
+        if (ano && fullName) {
+
+            let str = ''
+
+            str += `<input type="hidden" name="anos" value="\${ano}">`
+            str += `<input type="hidden" name="fullNames" value="\${fullName}">`
+
+            target.closest('div').remove()
+
+            document.querySelector('.deleteImages').innerHTML += str
+        }
+
+
     }, false)
 </script>
 

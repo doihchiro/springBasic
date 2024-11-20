@@ -56,7 +56,7 @@ public class BoardService {
         return boardMapper.select(bno);
     }
 
-    public boolean modify(BoardVO boardVO) {
+    public boolean modify(BoardVO boardVO, Long[] attachFileAnos) {
 
         int count = boardMapper.update(boardVO);
 
@@ -67,6 +67,11 @@ public class BoardService {
                 attach.setBno(boardVO.getBno());
                 boardMapper.insertAttach(attach);
             }
+        }
+
+        if (attachFileAnos != null && attachFileAnos.length > 0) {
+            // 한번에 boardMapper 에서 삭제 처리
+            boardMapper.deleteAttach(attachFileAnos);
         }
 
         return count == 1;

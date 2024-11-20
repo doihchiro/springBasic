@@ -2,13 +2,15 @@ package com.oasis.acquiesce.util;
 
 import com.oasis.acquiesce.domain.Attach;
 import lombok.extern.log4j.Log4j2;
-import net.coobird.thumbnailator.Thumbnailator;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -68,5 +70,20 @@ public class UpDownUtil {
         }// 파일 업로드 처리
 
         return attachList;
+    }
+
+    public void deleteFiles(String[] fileNames) {
+
+        if (fileNames == null || fileNames.length == 0) {
+            return;
+        }
+
+        for (String fileName : fileNames) {
+            File originalFile = new File(UPLOAD + File.separator + fileName);
+            File thumbFile = new File(UPLOAD + File.separator + "s_" + fileName);
+
+            originalFile.delete();
+            thumbFile.delete();
+        }
     }
 }
