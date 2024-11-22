@@ -6,7 +6,7 @@
 
     <sql id="search">
         <if test="(types != null and keyword != null)">
-            <foreach collection="types" item="type" open=" and ( " separator="OR" close=")">
+            <foreach collection="types" item="type" open=" and ( " separator="OR" close=" )">
                 <choose>
                     <when test='type.equals("T")'>
                         title like concat('%', #{keyword}, '%')
