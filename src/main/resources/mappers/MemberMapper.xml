@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oasis.acquiesce.mappers.MemberMapper">
+
+
+    <insert id="insertMember">
+        insert into tbl_member (uid, pwd, uname, email)
+        values (#{uid}, #{pwd}, #{uname}, #{email})
+    </insert>
+
+    <insert id="insertAuth">
+        insert into tbl_auth (roleName, uid)
+        VALUES (#{roleName}, #{uid})
+    </insert>
+    
+    <resultMap id="memberMap" type="Member">
+        <id property="uid" column="uid"/>
+        <result property="pwd" column="pwd"/>
+        <result property="uname" column="uname"/>
+        <result property="email" column="email"/>
+        <result property="regDate" column="regDate"/>
+        <result property="updateDate" column="updateDate"/>
+        <collection property="authList" resultMap="authMap"/>
+    </resultMap>
+
+    <resultMap id="authMap" type="MemberAuth">
+        <result property="roleName" column="roleName"/>
+        <result property="uid" column="uid"/>
+    </resultMap>
+
+    <select id="selectMember" resultMap="memberMap">
+        select * from tbl_member m
+        left join tbl_auth ta on m.uid = ta.uid
+        where m.uid = #{uid}
+    </select>
+</mapper>

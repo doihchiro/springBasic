@@ -2,32 +2,42 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:security="http://www.springframework.org/schema/security"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
     <security:http>
-        <security:form-login login-page="/member/login"/>
-
+<!--
         <security:intercept-url pattern="/sample/all" access="permitAll()"/>
         <security:intercept-url pattern="/sample/manager" access="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')"/>
         <security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"/>
+-->
 
         <security:access-denied-handler ref="custom403Handler"/>
+        <security:form-login
+                login-page="/member/login"
+                authentication-success-handler-ref="customLoginSuccessHandler"/>
+        <security:logout success-handler-ref="customLogoutSuccessHandler"/>
 
         <security:csrf disabled="true"/>
+
+        <security:remember-me token-validity-seconds="604800" data-source-ref="dataSource" />
     </security:http>
 
     <security:authentication-manager>
-        <security:authentication-provider>
-            <security:user-service>
-                <security:user name="loopy" authorities="ROLE_MANAGER"
-                               password="{bcrypt}$2a$10$LuFTY2HKgsjcBQcfIY1AVeeOqn2Hw7nG1Ej11cidRJCqvcByNox1C"/>
-                <security:user name="apple" authorities="ROLE_ADMIN"
-                               password="{bcrypt}$2a$10$LuFTY2HKgsjcBQcfIY1AVeeOqn2Hw7nG1Ej11cidRJCqvcByNox1C"/>
-            </security:user-service>
+        <security:authentication-provider user-service-ref="customUserDetailsService">
+            <!-- PasswordEncoder 추가 -->
+            <security:password-encoder ref="passwordEncoder" />
         </security:authentication-provider>
     </security:authentication-manager>
 
     <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-    <bean id="custom403Handler" class="com.oasis.acquiesce.security.handler.Custom403Handler"/>
 
+    <!-- handler bean -->
+    <bean id="custom403Handler" class="com.oasis.acquiesce.security.handler.Custom403Handler"/>
+    <bean id="customLoginSuccessHandler" class="com.oasis.acquiesce.security.handler.CustomLoginSuccessHandler"/>
+    <bean id="customLogoutSuccessHandler" class="com.oasis.acquiesce.security.handler.CustomLogoutSuccessHandler"/>
+
+    <!-- customService bean -->
+<!--    <bean id="customUserDetailsService" class="com.oasis.acquiesce.security.CustomUserDetailsService"/>-->
+    <context:component-scan base-package="com.oasis.acquiesce.security" />
 </beans>
