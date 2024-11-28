@@ -59,20 +59,14 @@ public class BoardController {
 
     }
 
-
-    @GetMapping("{job}/{bno}")
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/read/{bno}")
     public String read(
-            @PathVariable("job") String job,
             @PathVariable("bno") Long bno,
             @ModelAttribute("cri") Criteria criteria,
             Model model) {
 
-        log.info("job: " + job);
         log.info("bno: " + bno);
-
-        if ( !(job.equals("read") || job.equals("modify")) ) {
-           throw  new RuntimeException("Bad Request job");
-        }
 
         BoardVO boardVO = boardService.get(bno);
 
@@ -80,7 +74,7 @@ public class BoardController {
 
         model.addAttribute("vo", boardVO);
 
-        return "board/" + job;
+        return "board/read";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -112,7 +106,6 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
-
     @PostMapping("/remove/{bno}")
     public String remove(
             @PathVariable("bno") Long bno,
@@ -136,6 +129,23 @@ public class BoardController {
         rttr.addFlashAttribute("result", boardVO.getBno());
 
         return "redirect:/board/list";
+    }
+
+    @GetMapping("/modify/{bno}")
+    public String modify(
+            @PathVariable("bno") Long bno,
+            @ModelAttribute("cri") Criteria criteria,
+            Model model) {
+
+        log.info("bno: " + bno);
+
+        BoardVO boardVO = boardService.get(bno);
+
+        log.info("boardVO: " + boardVO);
+
+        model.addAttribute("vo", boardVO);
+
+        return "board/modify";
     }
 
     @PostMapping("/modify/{bno}")
@@ -167,19 +177,5 @@ public class BoardController {
         return "redirect:/board/read/{bno}";
     }
 
-
-//    @GetMapping("/modify/{bno}")
-//    public String modify(@PathVariable("bno") Long bno, Model model) {
-//
-//        log.info("bno: " + bno);
-//
-//        BoardVO boardVO = boardService.get(bno);
-//
-//        log.info("boardVO: " + boardVO);
-//
-//        model.addAttribute("vo", boardVO);
-//
-//        return "board/modify";
-//    }
 }
 

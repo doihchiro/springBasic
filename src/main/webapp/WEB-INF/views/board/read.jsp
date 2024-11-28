@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <%@include file="../includes/header.jsp"%>
 <!-- Page Heading -->
 <h1 class="h3 mb-2 text-gray-800">Read</h1>
@@ -56,9 +58,10 @@
         <div class="float-right">
             <button type="button" class="btn btn-info btnList" >LIST</button>
 
-            <%--<c:if test="${!vo.delFlag}">--%>
+            <sec:authentication property="principal" var="secInfo" />
+            <c:if test="${secInfo.uid == vo.writer}">
                 <button type="button" class="btn btn-warning btnModify" >MODIFY</button>
-            <%--</c:if>--%>
+            </c:if>
         </div>
     </div>
 </div>
