@@ -1,15 +1,14 @@
 package com.oasis.acquiesce.controller;
 
-import com.oasis.acquiesce.domain.Attach;
-import com.oasis.acquiesce.domain.BoardVO;
-import com.oasis.acquiesce.domain.Criteria;
-import com.oasis.acquiesce.domain.PageDTO;
+import com.oasis.acquiesce.domain.*;
 import com.oasis.acquiesce.service.BoardService;
 import com.oasis.acquiesce.util.UpDownUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -131,10 +130,12 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{bno}")
     public String modify(
             @PathVariable("bno") Long bno,
             @ModelAttribute("cri") Criteria criteria,
+            @AuthenticationPrincipal Member member,
             Model model) {
 
         log.info("bno: " + bno);
@@ -142,6 +143,13 @@ public class BoardController {
         BoardVO boardVO = boardService.get(bno);
 
         log.info("boardVO: " + boardVO);
+        log.info("member: " + member);
+
+        if (member != null) {
+            if (!member.getUid().equals(boardVO.getWriter())) {
+                throw new AccessDeniedException("NOT_OWN_MEMBER");
+            }
+        }
 
         model.addAttribute("vo", boardVO);
 
