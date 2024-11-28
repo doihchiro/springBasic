@@ -7,7 +7,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@include file="../includes/header.jsp"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+<%@ include file="../includes/header.jsp"%>
 
 <!-- Page Heading -->
 <h1 class="h3 mb-2 text-gray-800">Tables</h1>
@@ -17,7 +19,14 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+        <div class="m-0 font-weight-bold text-primary">Board List</div>
+        <sec:authorize access="isAuthenticated()">
+            <div class="float-right">
+                <a href="/board/register">
+                    <button class="btn btn-info">Register</button>
+                </a>
+            </div>
+        </sec:authorize>
     </div>
     <div class="card-body">
 

@@ -30,6 +30,7 @@
         </security:authentication-provider>
     </security:authentication-manager>
 
+    <!-- passwordEncoder bean -->
     <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
     <!-- handler bean -->
@@ -39,5 +40,7 @@
 
     <!-- customService bean -->
 <!--    <bean id="customUserDetailsService" class="com.oasis.acquiesce.security.CustomUserDetailsService"/>-->
+
     <context:component-scan base-package="com.oasis.acquiesce.security" />
+
 </beans>

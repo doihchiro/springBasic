@@ -9,6 +9,7 @@ import com.oasis.acquiesce.util.UpDownUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -82,9 +83,13 @@ public class BoardController {
         return "board/" + job;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/register")
-    public void register() {}
+    public void register() {
 
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/register")
     public String registerPost(
             BoardVO boardVO,

@@ -7,7 +7,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@include file="../includes/header.jsp"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+<%@ include file="../includes/header.jsp"%>
+
 <!-- Page Heading -->
 <h1 class="h3 mb-2 text-gray-800">Register</h1>
 <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
@@ -37,7 +40,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">Writer</span>
                 </div>
-                <input type="text" name="writer" class="form-control" >
+                <input type="text" name="writer" class="form-control" value="<sec:authentication property="principal.uid"/>" readonly>
             </div>
             <div class="form-group input-group input-group-lg">
                 <div class="input-group-prepend">
