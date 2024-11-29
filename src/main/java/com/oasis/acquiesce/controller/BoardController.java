@@ -156,6 +156,7 @@ public class BoardController {
         return "board/modify";
     }
 
+    @PreAuthorize("principal.username == #boardVO.writer")
     @PostMapping("/modify/{bno}")
     public String modify(
             @PathVariable("bno") Long bno,
