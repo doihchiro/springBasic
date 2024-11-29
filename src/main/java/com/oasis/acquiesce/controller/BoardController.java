@@ -110,10 +110,21 @@ public class BoardController {
             @PathVariable("bno") Long bno,
             @RequestParam(value = "anos", required = false) Long[] anos,
             @RequestParam(value = "fullNames", required = false) String[] fullNames,
+            @AuthenticationPrincipal Member member,
             RedirectAttributes rttr) {
 
-        BoardVO boardVO = new BoardVO();
-        boardVO.setBno(bno);
+        // 기존의 게시물을 조회해서 비교하고
+        BoardVO boardVO = boardService.get(bno);
+
+        if (boardVO == null) {
+            return "redirect:/board/list";
+        }
+
+        if (!boardVO.getWriter().equals(member.getUid())) {
+            throw new AccessDeniedException("NOT_OWN_MEMBER");
+        }
+
+        // 비교가 끝나면 변경해서 저장
         boardVO.setTitle("해당 글은 삭제 되었습니다.");
         boardVO.setContent("해당 글은 삭제 되었습니다.");
         boardVO.setDelFlag(true);
